@@ -9,9 +9,9 @@ Weather currentTemp;
 Weather tomorrowTemp;
 List<Weather> todayWeather;
 List<Weather> sevenDay;
-String lat = "53.9006";
-String lon = "27.5590";
-String city = "Minisk";
+String lat = "28.7041";
+String lon = "77.1025";
+String city = "Delhi";
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -82,76 +82,78 @@ var focusNode = FocusNode();
         child: Column(
           children: [
             Container(
-              child: searchBar?
-              TextField(
-                focusNode: focusNode,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                  fillColor: Color(0xff030317),
-                  filled: true,
-                  hintText:"Enter a city Name"
-                ),
-                textInputAction: TextInputAction.search,
-                onSubmitted: (value)async{
-                  CityModel temp = await fetchCity(value);
-                  if(temp==null){
-                    showDialog(context: context, builder: (BuildContext context){
-                      return AlertDialog(
-                        backgroundColor: Color(0xff030317),
-                        title:Text("City not found"),
-                        content: Text("Please check the city name"),
-                        actions: [
-                          TextButton(onPressed: (){
-                            Navigator.of(context).pop();
-                          }, child: Text("Ok"))
-                        ],
-                      );
+              child: Expanded(
+                child: searchBar?
+                TextField(
+                  focusNode: focusNode,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                    fillColor: Color(0xff030317),
+                    filled: true,
+                    hintText:"Enter a city Name"
+                  ),
+                  textInputAction: TextInputAction.search,
+                  onSubmitted: (value)async{
+                    CityModel temp = await fetchCity(value);
+                    if(temp==null){
+                      showDialog(context: context, builder: (BuildContext context){
+                        return AlertDialog(
+                          backgroundColor: Color(0xff030317),
+                          title:Text("City not found"),
+                          content: Text("Please check the city name"),
+                          actions: [
+                            TextButton(onPressed: (){
+                              Navigator.of(context).pop();
+                            }, child: Text("Ok"))
+                          ],
+                        );
+                      });
+                      searchBar = false;
+                      return;
+                    }
+                    city = temp.name;
+                    lat = temp.lat;
+                    lon = temp.lon;
+                    updating = true;
+                    setState(() {
+                      
                     });
+                    widget.updateData();
                     searchBar = false;
-                    return;
-                  }
-                  city = temp.name;
-                  lat = temp.lat;
-                  lon = temp.lon;
-                  updating = true;
-                  setState(() {
-                    
-                  });
-                  widget.updateData();
-                  searchBar = false;
-                  updating = false;
-                  setState(() {
-                    
-                  });
-                },
-              )
-              :Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Icon(
-                    CupertinoIcons.square_grid_2x2,
-                    color: Colors.white,
-                  ),
-                  Row(
-                    children: [
-                      Icon(CupertinoIcons.map_fill, color: Colors.white),
-                      GestureDetector(
-                        onTap: (){
-                          searchBar = true;
-                          setState(() {
-                            
-                          });
-                          focusNode.requestFocus();
-                        },
-                        child: Text(
-                          " " + city,
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                    updating = false;
+                    setState(() {
+                      
+                    });
+                  },
+                )
+                :Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(
+                      CupertinoIcons.square_grid_2x2,
+                      color: Colors.white,
+                    ),
+                    Row(
+                      children: [
+                        Icon(CupertinoIcons.map_fill, color: Colors.white),
+                        GestureDetector(
+                          onTap: (){
+                            searchBar = true;
+                            setState(() {
+                              
+                            });
+                            focusNode.requestFocus();
+                          },
+                          child: Text(
+                            " " + city,
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Icon(Icons.more_vert, color: Colors.white)
-                ],
+                      ],
+                    ),
+                    Icon(Icons.more_vert, color: Colors.white)
+                  ],
+                ),
               ),
             ),
             Container(
